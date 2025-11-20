@@ -14,6 +14,7 @@ from tqdm import tqdm
 import calendar
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pywt
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima.model import ARIMA
 from scipy.stats import linregress
@@ -242,3 +243,38 @@ def ts_model_eval(data: pd.Series, len_test:int,
     plt.title(f'RMSE: {rmse:.2f} MAPE: {mape:.2%}')
     plt.show()
     return model_base_fit, forecast_steps
+
+def wavelet(signal, min_period, max_period, dt=1):
+    scales = np.arange(min_period, max_period + 1)
+
+    # Wavelet
+    coeffs, freqs = pywt.cwt(signal, scales=scales, wavelet='morl', sampling_period=dt)
+    periods = scales
+    time = np.arange(len(signal))
+
+    # Cone of influence approximation
+    coi = np.sqrt(2) * max_period * (1 - np.abs(time - len(signal)/2) / (len(signal)/2))
+
+    plt.figure(figsize=(12,6))
+    plt.imshow(np.abs(coeffs),
+            extent=[0, len(signal), periods[-1], periods[0]],
+            aspect='auto',
+            cmap='viridis')
+
+    # COI “belly”
+    plt.plot(time, coi, 'w--', linewidth=1.5)
+    plt.plot(time, periods[-1] - coi + periods[0], 'w--', linewidth=1.5)
+
+    # Gray area
+    plt.fill_between(range(0, len(signal)), periods[-1] - coi + periods[0], where=coi > 0, facecolor='lightgray', alpha=0.5)
+    plt.fill_between(range(0, len(signal)), coi, [len(signal)]*len(signal), facecolor='lightgray', alpha=0.5)
+
+    plt.title("Wavelet Scalogram with Cone of Influence")
+    plt.xlabel("Time (days)")
+    plt.xlim(500, 2050)
+    plt.ylabel("Period (days)")
+    plt.ylim(1, 500)
+    plt.yticks(range(0,500,60))
+    plt.colorbar(label='Power')
+    plt.grid(linestyle='--', color='w', alpha=0.5)
+    plt.show()
