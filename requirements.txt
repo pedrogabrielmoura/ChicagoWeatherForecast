@@ -1,0 +1,10 @@
+jupyterlab
+numpy
+pandas
+missingno 
+matplotlib
+seaborn
+statsmodels
+tqdm
+meteostat
+pyarrow
