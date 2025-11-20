@@ -8,3 +8,4 @@ statsmodels
 tqdm
 meteostat
 pyarrow
+scikit-learn

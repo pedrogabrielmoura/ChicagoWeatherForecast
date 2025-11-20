@@ -106,7 +106,7 @@ def ts_quick_insights(serie: pd.Series, time_index: pd.Series, figsize=(15, 5)):
     ax[0].set_xticks([i for i, d in enumerate(time_index) if d in pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS')])
     ax[0].set_xticklabels(pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS').strftime('%b\n%y'))
     ax[0].grid(linestyle='--')
-    ax[0].set_title(f"Trend Analysis with Linear Regression\nSlope: {np.degrees(np.arctan(slope)):.1f}°")
+    ax[0].set_title(f"Trend Analysis with Linear Regression")
 
     # Seasonal plot
     for year in time_index.dt.year.unique():
