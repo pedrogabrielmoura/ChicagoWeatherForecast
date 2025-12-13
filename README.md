@@ -104,17 +104,3 @@ The work was structured into four main stages:
 ├── results/ # Results, metrics, and figures  
 ├── README.md # Project documentation  
 └── estudo_caso_chicago.pdf # Final article version
-
----
-
-## 🚀 Reproducibility
-
-The experiments use sliding-window validation and cross-validation. Preprocessing, modeling, and evaluation steps were automated to facilitate the reproduction of results.
-
----
-
-## 📚 Reference
-
-If you use this repository, cite:
-
-> Moura, P. G. *Assessment of Dynamic Harmonic Regression with Boosting for 365-Day Temperature Forecasts: A Case Study in Chicago*.
