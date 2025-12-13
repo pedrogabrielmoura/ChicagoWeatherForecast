@@ -103,7 +103,7 @@ The work was structured into four main stages:
 ├── src/ # Model source code  
 ├── results/ # Results, metrics, and figures  
 ├── README.md # Project documentation  
-└── artigo.pdf # Final article version
+└── estudo_caso_chicago.pdf # Final article version
 
 ---
 
