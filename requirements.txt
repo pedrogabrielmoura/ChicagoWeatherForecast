@@ -13,3 +13,4 @@ scikit-learn
 lightgbm
 xgboost
 optuna
+tqdm_joblib
