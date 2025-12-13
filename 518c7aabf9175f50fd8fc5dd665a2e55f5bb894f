@@ -1,0 +1,14 @@
+{
+  "event": "security_override",
+  "timestamp": "2025-12-13T12:35:36.280230",
+  "user": "pedro.moura@incognia.com",
+  "branch": "model",
+  "files": [
+    "notebooks/sanity_check/sanity_check.ipynb",
+    "notebooks/exploratory_analysis/eda_linear.ipynb"
+  ],
+  "detectors": [
+    "Box"
+  ],
+  "secrets_found": 2
+}
