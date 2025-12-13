@@ -70,12 +70,11 @@ def ts_plot(serie: pd.Series, time_index: pd.Series, figsize=(15, 3)):
     # Additional layout settings
     plt.legend(loc='lower center', ncols=time_index.dt.year.nunique())
     plt.grid(linestyle='--', )
-    plt.title(f"Data Time Distribution ({serie.name})")
     plt.xlabel("Date")
     plt.ylabel("Values")
     plt.show()
 
-def ts_quick_insights(serie: pd.Series, time_index: pd.Series, figsize=(15, 5)):
+def ts_quick_insights(serie: pd.Series, time_index: pd.Series, figsize=(8, 3)):
     """
     Generate quick insights about a time series, including trend and seasonal analysis.
     
@@ -94,37 +93,37 @@ def ts_quick_insights(serie: pd.Series, time_index: pd.Series, figsize=(15, 5)):
     x = range(len(serie))
     slope, intercept, r_value, p_value, std_err = linregress(x, serie)
 
-    # Plotting
-    fig, ax = plt.subplots(1, 2, figsize=figsize)
-
     # Trend plot
-    sns.scatterplot(x=x, y=serie, ax=ax[0])
-    sns.lineplot(x=x, y=moving_average, color='orange', ax=ax[0], label='Moving Average')
+    plt.figure(figsize=figsize)
+
+    ax1 = sns.scatterplot(x=x, y=serie)
+    sns.lineplot(x=x, y=moving_average, color='orange', label='Moving Average')
     sns.lineplot(x=[0, len(serie)], y=[intercept, slope * len(serie) + intercept],
-                 color='red', ax=ax[0], label='Linear Regression')
+                 color='red', label='Linear Regression')
     
-    ax[0].set_xlim([-50, len(serie) + 50]) 
-    ax[0].set_xticks([i for i, d in enumerate(time_index) if d in pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS')])
-    ax[0].set_xticklabels(pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS').strftime('%b\n%y'))
-    ax[0].grid(linestyle='--')
-    ax[0].set_title(f"Trend Analysis with Linear Regression")
+    plt.xlim([-50, len(serie) + 50]) 
+    plt.xticks([i for i, d in enumerate(time_index) if d in pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS')])
+    ax1.set_xticklabels(pd.date_range(start=time_index.min(), end=time_index.max(), freq='2QS').strftime('%b\n%y'))
+    plt.grid(linestyle='--')
+
+    plt.show()
 
     # Seasonal plot
+    plt.figure(figsize=figsize)
+
     for year in time_index.dt.year.unique():
         serie_per_year = serie.loc[time_index.dt.year == year].reset_index(drop=True)
-        sns.lineplot(serie_per_year, color='black', alpha=0.3, ax=ax[1])
+        ax2 = sns.lineplot(serie_per_year, color='black', alpha=0.3)
 
     # Layout for seasonal plot
     month_ticks = np.cumsum([calendar.monthrange(1997, month)[1] for month in range(1, 13)])
-    ax[1].set_xticks(month_ticks, [])
-    ax[1].secondary_xaxis(location=0).set_xticks(month_ticks - np.diff(month_ticks, prepend=0) / 2,
+    plt.xticks(month_ticks, [])
+    ax2.secondary_xaxis(location=0).set_xticks(month_ticks - np.diff(month_ticks, prepend=0) / 2,
                                                  labels=pd.date_range(start='1997-01-01', end='1997-12-31', freq='ME').strftime('%b'))
-    ax[1].grid(linestyle='--')
-    ax[1].set_title("Visualizing Seasonal Patterns Across Years")
-    ax[1].set_xlabel("\nTime Within Year")
-    ax[1].set_xlim([-5, 371])
+    plt.grid(linestyle='--')
+    plt.xlabel("\nTime Within Year")
+    plt.xlim([-5, 371])
 
-    plt.tight_layout()
     plt.show()
 
 def plot_acf_pacf(serie: pd.Series, focus: str = 'normal'):
@@ -269,7 +268,6 @@ def wavelet(signal, min_period, max_period, dt=1):
     plt.fill_between(range(0, len(signal)), periods[-1] - coi + periods[0], where=coi > 0, facecolor='lightgray', alpha=0.5)
     plt.fill_between(range(0, len(signal)), coi, [len(signal)]*len(signal), facecolor='lightgray', alpha=0.5)
 
-    plt.title("Wavelet Scalogram with Cone of Influence")
     plt.xlabel("Time (days)")
     plt.xlim(500, 2050)
     plt.ylabel("Period (days)")
