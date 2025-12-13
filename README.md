@@ -1,91 +1,91 @@
-# Previsão de Temperatura com Regressão Harmônica Dinâmica e Boosting
+# Temperature Forecasting with Dynamic Harmonic Regression and Boosting
 
-Este repositório contém os códigos, experimentos e análises desenvolvidos no artigo: 
-**Avaliação da Regressão Harmônica Dinâmica com Boosting para Previsões de Temperatura em 365 Dias: Um Estudo de Caso em Chicago**  
-
----
-
-## Visão Geral
-
-A previsão de temperatura em horizontes longos é um problema desafiador devido à forte sazonalidade anual e à presença de heteroscedasticidade. Este projeto avalia uma abordagem **híbrida** de previsão, combinando:
-
-- **Regressão Harmônica Dinâmica (RHD)** para modelar a estrutura temporal e sazonal;
-- **LightGBM** aplicado aos resíduos da RHD, com o objetivo de capturar padrões remanescentes não explicados pelo modelo estatístico.
-
-O estudo utiliza dados meteorológicos diários da cidade de **Chicago (EUA)** e considera um horizonte de previsão de até **365 dias à frente**.
+This repository contains the code, experiments, and analyses developed for the article:  
+**Avaliação da Regressão Harmônica Dinâmica com Boosting para Previsões de Temperatura em 365 Dias: Um Estudo de Caso em Chicago**
 
 ---
 
-## 🎯 Objetivos
+## Overview
 
-- Avaliar o desempenho da Regressão Harmônica Dinâmica em previsões de longo prazo;
-- Investigar se a modelagem dos resíduos com aprendizado de máquina gera ganhos de acurácia;
-- Analisar as limitações de modelos híbridos em cenários com forte estrutura sazonal e covariáveis com baixo poder preditivo em grandes defasagens.
+Long-horizon temperature forecasting is a challenging problem due to strong annual seasonality and the presence of heteroscedasticity. This project evaluates a **hybrid** forecasting approach that combines:
 
----
+- **Dynamic Harmonic Regression (DHR)** to model temporal and seasonal structure;
+- **LightGBM** applied to the DHR residuals to capture remaining patterns not explained by the statistical model.
 
-## 📊 Conjunto de Dados
-
-- **Fonte:** API do pacote `Meteostat` (Python)
-- **Período:** 21/11/2014 a 09/11/2025
-- **Frequência:** Diária
-- **Variável alvo:** Temperatura média diária (`tavg`)
-- **Covariáveis utilizadas:**
-  - Temperatura mínima e máxima
-  - Precipitação
-  - Neve
-  - Velocidade do vento
-  - Pressão atmosférica
-  - Amplitude térmica diária (variável derivada)
-
-As variáveis com baixa completude foram removidas e os dados passaram por um processo rigoroso de sanitização e preparação.
+The study uses daily meteorological data from **Chicago (USA)** and considers forecasting horizons of up to **365 days ahead**.
 
 ---
 
-## 🧠 Metodologia
+## 🎯 Objectives
 
-O trabalho foi estruturado em quatro etapas principais:
-
-### 1. Sanitização dos Dados
-- Verificação de consistência e continuidade temporal;
-- Remoção de variáveis com alta taxa de ausência;
-- Tratamento de valores extremos e inconsistências.
-
-### 2. Análise Exploratória
-- Identificação de sazonalidade anual dominante via análise wavelet;
-- Investigação de tendência (considerada desprezível);
-- Avaliação de heteroscedasticidade;
-- Testes com transformação Box–Cox (posteriormente descartada).
-
-### 3. Modelagem Temporal
-- Ajuste de múltiplos modelos de **Regressão Harmônica Dinâmica** (ARIMA com termos de Fourier);
-- Seleção baseada em AIC e validação por janela deslizante;
-- Escolha da RHD como modelo baseline.
-
-### 4. Modelagem dos Resíduos
-- Engenharia extensiva de variáveis com defasagens longas (365–730 dias);
-- Comparação entre XGBoost e LightGBM;
-- Seleção de variáveis em múltiplas etapas (gain e forward selection);
-- Otimização de hiperparâmetros via Optuna e Grid Search.
+- Evaluate the performance of Dynamic Harmonic Regression in long-term forecasts;
+- Investigate whether modeling residuals with machine learning improves accuracy;
+- Analyze limitations of hybrid models in scenarios with strong seasonal structure and covariates with low predictive power at large lags.
 
 ---
 
-## 📈 Resultados
+## 📊 Dataset
 
-- A **Regressão Harmônica Dinâmica isolada** apresentou desempenho igual ou superior ao modelo híbrido na maior parte dos horizontes analisados;
-- O **modelo híbrido (RHD + LightGBM)** obteve ganhos marginais, mais perceptíveis em horizontes mais longos;
-- Os resultados indicam que, em contextos com forte sazonalidade e covariáveis pouco informativas, o potencial de melhoria via aprendizado de máquina é limitado.
+- **Source:** `Meteostat` API (Python)
+- **Period:** 2014-11-21 to 2025-11-09
+- **Frequency:** Daily
+- **Target variable:** Daily average temperature (`tavg`)
+- **Covariates used:**
+  - Minimum and maximum temperature
+  - Precipitation
+  - Snow
+  - Wind speed
+  - Atmospheric pressure
+  - Daily thermal amplitude (derived variable)
+
+Variables with low completeness were removed, and the data underwent rigorous sanitation and preparation.
 
 ---
 
-## 🧪 Métricas de Avaliação
+## 🧠 Methodology
 
-- **MAE (Mean Absolute Error)** – métrica principal
-- **RMSE (Root Mean Squared Error)** – utilizada em análises exploratórias
+The work was structured into four main stages:
+
+### 1. Data Sanitization
+- Consistency and temporal continuity checks;
+- Removal of variables with high missingness;
+- Treatment of outliers and inconsistencies.
+
+### 2. Exploratory Analysis
+- Identification of dominant annual seasonality via wavelet analysis;
+- Investigation of trend (considered negligible);
+- Assessment of heteroscedasticity;
+- Tests with Box–Cox transformation (later discarded).
+
+### 3. Temporal Modeling
+- Fitting multiple **Dynamic Harmonic Regression** models (ARIMA with Fourier terms);
+- Model selection based on AIC and sliding-window validation;
+- Selection of DHR as the baseline model.
+
+### 4. Residual Modeling
+- Extensive feature engineering with long lags (365–730 days);
+- Comparison between XGBoost and LightGBM;
+- Multi-stage variable selection (gain and forward selection);
+- Hyperparameter optimization using Optuna and Grid Search.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 📈 Results
+
+- **Dynamic Harmonic Regression alone** performed as well as or better than the hybrid model across most forecast horizons;
+- The **hybrid model (DHR + LightGBM)** produced marginal improvements, more noticeable at longer horizons;
+- Results indicate that in contexts with strong seasonality and weakly informative covariates, the potential gain from machine learning is limited.
+
+---
+
+## 🧪 Evaluation Metrics
+
+- **MAE (Mean Absolute Error)** – main metric  
+- **RMSE (Root Mean Squared Error)** – used in exploratory analyses
+
+---
+
+## 🛠️ Technologies Used
 
 - Python  
 - `statsmodels`  
@@ -96,26 +96,25 @@ O trabalho foi estruturado em quatro etapas principais:
 
 ---
 
-## 📁 Estrutura do Repositório
+## 📁 Repository Structure
 
-├── data/ # Dados brutos e processados
-├── notebooks/ # Análises exploratórias e experimentos
-├── src/ # Código-fonte dos modelos
-├── results/ # Resultados, métricas e figuras
-├── README.md # Documentação do projeto
-└── artigo.pdf # Versão final do artigo
-
-
----
-
-## 🚀 Reprodutibilidade
-
-Os experimentos utilizam validação por janela deslizante e validação cruzada. As etapas de pré-processamento, modelagem e avaliação foram automatizadas para facilitar a reprodução dos resultados.
+├── data/ # Raw and processed data  
+├── notebooks/ # Exploratory analyses and experiments  
+├── src/ # Model source code  
+├── results/ # Results, metrics, and figures  
+├── README.md # Project documentation  
+└── artigo.pdf # Final article version
 
 ---
 
-## 📚 Referência
+## 🚀 Reproducibility
 
-Se utilizar este repositório, cite:
+The experiments use sliding-window validation and cross-validation. Preprocessing, modeling, and evaluation steps were automated to facilitate the reproduction of results.
 
-> Moura, P. G. *Avaliação da Regressão Harmônica Dinâmica com Boosting para Previsões de Temperatura em 365 Dias: Um Estudo de Caso em Chicago*.
+---
+
+## 📚 Reference
+
+If you use this repository, cite:
+
+> Moura, P. G. *Assessment of Dynamic Harmonic Regression with Boosting for 365-Day Temperature Forecasts: A Case Study in Chicago*.
